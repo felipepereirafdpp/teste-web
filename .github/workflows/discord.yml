@@ -3,7 +3,7 @@ name: Notificação de Change Log no Discord
 on:
   push:
     branches:
-      - main
+      - "*"
     
 jobs:
   notify:
