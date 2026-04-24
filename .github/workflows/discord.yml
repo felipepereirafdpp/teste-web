@@ -3,7 +3,7 @@ name: Notificação de Change Log no Discord
 on:
   push:
     branches:
-      - main
+      - "*"
 
 jobs:
   notify:
@@ -13,27 +13,19 @@ jobs:
       - name: Baixar repositório
         uses: actions/checkout@v4
 
-      - name: Ler Change Log
-        id: changelog
-        run: |
-          echo "content<<EOF" >> $GITHUB_OUTPUT
-          if [ -f CHANGELOG.md ]; then
-            # Pega os primeiros 1800 caracteres e remove aspas/crases que quebram o JSON
-            head -c 1800 CHANGELOG.md | tr -d '"' | tr -d '`' >> $GITHUB_OUTPUT
-          else
-            echo "CHANGELOG.md não encontrado." >> $GITHUB_OUTPUT
-          fi
-          echo "" >> $GITHUB_OUTPUT
-          echo "EOF" >> $GITHUB_OUTPUT
-
       - name: Enviar para Discord
         env:
-          DISCORD_WEBHOOK: ${{ secrets.ULTRA_BOT }}
+          WEBHOOK_URL: ${{ secrets.ULTRA_BOT }}
         run: |
+          # 1. Lê o arquivo e remove o que estraga o JSON (aspas e quebras de linha extras)
+          # Se o arquivo não existir, gera uma mensagem simples
+          if [ -f CHANGELOG.md ]; then
+            CHANGES=$(head -n 15 CHANGELOG.md | tr -d '"' | tr -d '`' | tr '\n' ' ')
+          else
+            CHANGES="Arquivo CHANGELOG.md não encontrado."
+          fi
+
+          # 2. Faz o POST direto
           curl -H "Content-Type: application/json" \
-          -X POST \
-          -d @- <<EOF
-          {
-            "content": " **Atualização no Change Log!**\n\n Últimas alterações do servidor:\n\n\`\`\`\n${{ steps.changelog.outputs.content }}\n\`\`\`\n\n⚡ Atualização enviada automaticamente pelo GitHub Actions"
-          }
-          EOF
+          -d "{\"content\": \"**Atualização no Change Log!**\n\`\`\`\n$CHANGES\n\`\`\`\"}" \
+          $WEBHOOK_URL
