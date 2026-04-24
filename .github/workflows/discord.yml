@@ -1,3 +1,4 @@
+name: Notificação de Change Log no Discord
 
 on:
   push:
@@ -20,10 +21,10 @@ jobs:
             CONTENT="CHANGELOG.md não encontrado."
           fi
 
-          # Escapa caracteres para não quebrar o JSON
-          CONTENT=$(printf "%s" "$CONTENT" | sed 's/\\/\\\\/g; s/"/\\"/g')
-
-          echo "CONTENT=$CONTENT" >> $GITHUB_ENV
+          # Salva corretamente com multiline
+          echo "CONTENT<<EOF" >> $GITHUB_ENV
+          echo "$CONTENT" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
 
       - name: Enviar para Discord
         run: |
