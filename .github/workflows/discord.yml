@@ -21,8 +21,7 @@ jobs:
             CONTENT="CHANGELOG.md não encontrado."
           fi
 
-          # 🔧 AJUSTE: escapar aspas para não quebrar o JSON
-          CONTENT=$(printf "%s" "$CONTENT" | sed 's/"/\\"/g')
+          CONTENT=$(printf "%s" "$CONTENT" | sed 's/\\/\\\\/g; s/"/\\"/g; s/$/\\n/g')
 
           echo "CONTENT<<EOF" >> $GITHUB_ENV
           echo "$CONTENT" >> $GITHUB_ENV
@@ -32,5 +31,5 @@ jobs:
         run: |
           curl -H "Content-Type: application/json" \
           -X POST \
-          -d "{\"content\": \" **Atualização no Change Log!**\n\n Últimas alterações do servidor:\n\n\`\`\`\n$CONTENT\n\`\`\`\n\n Atualização enviada automaticamente pelo GitHub\"}" \
+          -d "{\"content\": \" **Atualização no Change Log!**\n\n Últimas alterações do servidor:\n\n\`\`\`\n$CONTENT\n\`\`\`\n\n⚡ Atualização enviada automaticamente pelo GitHub Actions\"}" \
           ${{ secrets.ULTRA_BOT }}
