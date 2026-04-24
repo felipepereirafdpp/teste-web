@@ -1,0 +1,33 @@
+name: Notificação de Change Log no Discord
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "CHANGELOG.md"
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Baixar repositório
+        uses: actions/checkout@v4
+
+      - name: Ler Change Log
+        id: changelog
+        run: |
+          echo "content<<EOF" >> $GITHUB_OUTPUT
+          head -c 1800 CHANGELOG.md >> $GITHUB_OUTPUT
+          echo "" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Enviar para Discord
+        run: |
+          curl -H "Content-Type: application/json" \
+          -X POST \
+          -d "{
+            \"content\": \"📢 **Atualização no Change Log!**\n\n📄 Últimas alterações do servidor:\n\n\`\`\`\n${{ steps.changelog.outputs.content }}\n\`\`\`\n\n⚡ Atualização enviada automaticamente pelo GitHub Actions\"
+          }" \
+          ${{ secrets.DISCORD_WEBHOOK }}
