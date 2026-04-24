@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - "*"
-    
+
 jobs:
   notify:
     runs-on: ubuntu-latest
@@ -13,19 +13,23 @@ jobs:
       - name: Baixar repositório
         uses: actions/checkout@v4
 
-      - name: Ler Change Log
+      - name: Ler Change Log (seguro)
         id: changelog
         run: |
-          echo "content<<EOF" >> $GITHUB_OUTPUT
-          head -c 1800 CHANGELOG.md >> $GITHUB_OUTPUT
-          echo "" >> $GITHUB_OUTPUT
-          echo "EOF" >> $GITHUB_OUTPUT
+          if [ -f CHANGELOG.md ]; then
+            CONTENT=$(head -c 1800 CHANGELOG.md)
+          else
+            CONTENT="CHANGELOG.md não encontrado."
+          fi
+
+          # Escapa caracteres para JSON
+          CONTENT_ESCAPED=$(printf "%s" "$CONTENT" | sed 's/\\/\\\\/g; s/"/\\"/g; s/$/\\n/g')
+
+          echo "content=$CONTENT_ESCAPED" >> $GITHUB_OUTPUT
 
       - name: Enviar para Discord
         run: |
           curl -H "Content-Type: application/json" \
           -X POST \
-          -d "{
-            \"content\": \" **Atualização no Change Log!**\n\n Últimas alterações do servidor:\n\n\`\`\`\n${{ steps.changelog.outputs.content }}\n\`\`\`\n\n⚡ Atualização enviada automaticamente pelo GitHub Actions\"
-          }" \
-          ${{ secrets.ULTRA_BOT}}
+          -d "{\"content\": \"🚀 Atualização no Change Log!\\n\\nÚltimas alterações:\\n\\n\`\`\`\\n${{ steps.changelog.outputs.content }}\\n\`\`\`\\n\\n⚡ Enviado automaticamente pelo GitHub Actions\"}" \
+          ${{ secrets.ULTRA_BOT }}
