@@ -14,21 +14,26 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Ler Change Log
-        id: read_changelog
         run: |
           if [ -f CHANGELOG.md ]; then
-            # Pega as primeiras 15 linhas e remove caracteres problemáticos
+            # Pega as primeiras 15 linhas, remove aspas e limpa o texto
             head -n 15 CHANGELOG.md | tr -d '"' | tr -d '`' > log_limpo.txt
           else
             echo "CHANGELOG.md não encontrado." > log_limpo.txt
           fi
 
       - name: Enviar para Discord
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.ULTRA_BOT }}
         run: |
-          # Lemos o arquivo para uma variável do Bash neste step
+          # Se a variável estiver vazia, avisa no log e para
+          if [ -z "$DISCORD_WEBHOOK" ]; then
+            echo "ERRO: O segredo ULTRA_BOT está vazio ou não foi encontrado!"
+            exit 1
+          fi
+
           CONTEUDO=$(cat log_limpo.txt)
-          
-          # Enviamos via cURL usando um heredoc para o JSON
+
           curl -H "Content-Type: application/json" \
           -X POST \
           -d @- <<EOF
@@ -36,6 +41,3 @@ jobs:
             "content": "**Atualização no Change Log!**\n\nÚltimas alterações:\n\`\`\`\n$CONTEUDO\n\`\`\`\n\n⚡ Enviado via GitHub Actions"
           }
           EOF
-        env:
-          # Garanta que o segredo ULTRA_BOT é a URL do Webhook (https://discord.com/api/webhooks/...)
-          ULTRA_BOT: ${{ secrets.ULTRA_BOT }}
