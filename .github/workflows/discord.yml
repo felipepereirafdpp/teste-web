@@ -13,31 +13,19 @@ jobs:
       - name: Baixar repositório
         uses: actions/checkout@v4
 
-      - name: Ler Change Log
-        run: |
-          if [ -f CHANGELOG.md ]; then
-            # Pega as primeiras 15 linhas, remove aspas e limpa o texto
-            head -n 15 CHANGELOG.md | tr -d '"' | tr -d '`' > log_limpo.txt
-          else
-            echo "CHANGELOG.md não encontrado." > log_limpo.txt
-          fi
-
       - name: Enviar para Discord
         env:
-          DISCORD_WEBHOOK: ${{ secrets.ULTRA_BOT }}
+          WEBHOOK_URL: ${{ secrets.ULTRA_BOT }}
         run: |
-          # Se a variável estiver vazia, avisa no log e para
-          if [ -z "$DISCORD_WEBHOOK" ]; then
-            echo "ERRO: O segredo ULTRA_BOT está vazio ou não foi encontrado!"
-            exit 1
+          # 1. Lê o arquivo e remove o que estraga o JSON (aspas e quebras de linha extras)
+          # Se o arquivo não existir, gera uma mensagem simples
+          if [ -f CHANGELOG.md ]; then
+            CHANGES=$(head -n 15 CHANGELOG.md | tr -d '"' | tr -d '`' | tr '\n' ' ')
+          else
+            CHANGES="Arquivo CHANGELOG.md não encontrado."
           fi
 
-          CONTEUDO=$(cat log_limpo.txt)
-
+          # 2. Faz o POST direto
           curl -H "Content-Type: application/json" \
-          -X POST \
-          -d @- <<EOF
-          {
-            "content": "**Atualização no Change Log!**\n\nÚltimas alterações:\n\`\`\`\n$CONTEUDO\n\`\`\`\n\n⚡ Enviado via GitHub Actions"
-          }
-          EOF
+          -d "{\"content\": \"**Atualização no Change Log!**\n\`\`\`\n$CHANGES\n\`\`\`\"}" \
+          $WEBHOOK_URL
