@@ -21,7 +21,9 @@ jobs:
             CONTENT="CHANGELOG.md não encontrado."
           fi
 
-          # Salva corretamente com multiline
+          # 🔧 AJUSTE: escapar aspas para não quebrar o JSON
+          CONTENT=$(printf "%s" "$CONTENT" | sed 's/"/\\"/g')
+
           echo "CONTENT<<EOF" >> $GITHUB_ENV
           echo "$CONTENT" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
@@ -30,5 +32,5 @@ jobs:
         run: |
           curl -H "Content-Type: application/json" \
           -X POST \
-          -d "{\"content\": \" **Atualização no Change Log!**\n\n Últimas alterações do servidor:\n\n\`\`\`\n$CONTENT\n\`\`\`\n\n⚡ Atualização enviada automaticamente pelo GitHub Actions\"}" \
+          -d "{\"content\": \" **Atualização no Change Log!**\n\n Últimas alterações do servidor:\n\n\`\`\`\n$CONTENT\n\`\`\`\n\n Atualização enviada automaticamente pelo GitHub\"}" \
           ${{ secrets.ULTRA_BOT }}
