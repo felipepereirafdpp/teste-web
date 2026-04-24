@@ -4,9 +4,7 @@ on:
   push:
     branches:
       - main
-    paths:
-      - "CHANGELOG.md"
-
+    
 jobs:
   notify:
     runs-on: ubuntu-latest
