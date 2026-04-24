@@ -27,5 +27,5 @@ jobs:
 
           # 2. Faz o POST direto
           curl -H "Content-Type: application/json" \
-          -d "{\"content\": \"**Atualização no Change Log!**\n\`\`\`\n$CHANGES\n\`\`\`\"}" \
+          -d "{\"content\": \"**Atualização no Change Log Felipe!**\n\`\`\`\n$CHANGES\n\`\`\`\"}" \
           $WEBHOOK_URL
