@@ -13,23 +13,29 @@ jobs:
       - name: Baixar repositório
         uses: actions/checkout@v4
 
-      - name: Ler Change Log (seguro)
+      - name: Ler Change Log
+        id: read_changelog
         run: |
           if [ -f CHANGELOG.md ]; then
-            CONTENT=$(head -c 1800 CHANGELOG.md)
+            # Pega as primeiras 15 linhas e remove caracteres problemáticos
+            head -n 15 CHANGELOG.md | tr -d '"' | tr -d '`' > log_limpo.txt
           else
-            CONTENT="CHANGELOG.md não encontrado."
+            echo "CHANGELOG.md não encontrado." > log_limpo.txt
           fi
-
-          CONTENT=$(printf "%s" "$CONTENT" | sed 's/\\/\\\\/g; s/"/\\"/g; s/$/\\n/g')
-
-          echo "CONTENT<<EOF" >> $GITHUB_ENV
-          echo "$CONTENT" >> $GITHUB_ENV
-          echo "EOF" >> $GITHUB_ENV
 
       - name: Enviar para Discord
         run: |
+          # Lemos o arquivo para uma variável do Bash neste step
+          CONTEUDO=$(cat log_limpo.txt)
+          
+          # Enviamos via cURL usando um heredoc para o JSON
           curl -H "Content-Type: application/json" \
           -X POST \
-          -d "{\"content\": \" **Atualização no Change Log!**\n\n Últimas alterações do servidor:\n\n\`\`\`\n$CONTENT\n\`\`\`\n\n⚡ Atualização enviada automaticamente pelo GitHub Actions\"}" \
-          ${{ secrets.ULTRA_BOT }}
+          -d @- <<EOF
+          {
+            "content": "**Atualização no Change Log!**\n\nÚltimas alterações:\n\`\`\`\n$CONTEUDO\n\`\`\`\n\n⚡ Enviado via GitHub Actions"
+          }
+          EOF
+        env:
+          # Garanta que o segredo ULTRA_BOT é a URL do Webhook (https://discord.com/api/webhooks/...)
+          ULTRA_BOT: ${{ secrets.ULTRA_BOT }}
