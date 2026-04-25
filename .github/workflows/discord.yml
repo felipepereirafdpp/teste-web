@@ -15,7 +15,7 @@ jobs:
         run: |
           echo "COMMIT_MSG=$(git log -1 --pretty=%B)" >> $GITHUB_ENV 
           echo "COMMIT_AUTHOR=$(git log -1 --pretty=%an)" >> $GITHUB_ENV
-
+          echo "DATE=$(date '+%d/%m/%Y %H:%M:%S')" >> $GITHUB_ENV
          
 
       - name: Enviar para Discord # nome do passo que aparece no log do GitHub Actions /(git log -1 --pretty=%B)" >> $GITHUB_ENV  pega a mensagem enviado no commit , COMMIT_AUTHOR=$(git log -1 --pretty=%an)" >> $GITHUB_ENV pega o autor do commit
@@ -43,7 +43,11 @@ jobs:
                     \"value\": \"$COMMIT_MSG\",
                     \"inline\": true
                   },
-                  
+                  {
+                    "name": "Data",
+                    "value": "$DATE",
+                    "inline": true
+                  },            
                   {
                     \"name\": \"Change Log\",
                     \"value\": \"$CHANGELOG\"
