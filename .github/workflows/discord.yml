@@ -25,7 +25,7 @@ jobs:
           -d "{
             \"embeds\": [
               {
-                \"title\": \"Atualizacao do Servidor\",
+                \"title\": \"Atualização do Servidor\",
                 \"color\": 16766720,
                 \"fields\": [
                   {
