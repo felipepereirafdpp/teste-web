@@ -8,6 +8,7 @@ and Semantic Versioning
 ---
 
 ## [Unreleased]
+
 Alterações ainda em desenvolvimento podem sofrer mudanças
 
 Changes currently in development subject to change
@@ -27,12 +28,13 @@ Changes currently in development subject to change
 ---
 
 ## [1.2.4] - 2017-03-15
+
 Atualização focada em melhorias internas e correções críticas
 
 Update focused on internal improvements and critical fixes
 
 ### Added / Adicionado
-- Opcional Novas funcionalidades adicionadas nesta versão
+- Novas funcionalidades adicionadas nesta versão
 
 ### Changed / Alterado
 - Migração de dependências para melhor compatibilidade com o servidor
@@ -45,12 +47,13 @@ Update focused on internal improvements and critical fixes
 ---
 
 ## [1.2.3] - 2017-03-14
+
 Correções gerais e melhorias de estabilidade
 
 General fixes and stability improvements
 
 ### Added / Adicionado
-- Opcional Pequenas melhorias implementadas
+- Pequenas melhorias implementadas
 
 ### Changed / Alterado
 - Ajuste no uso de timezone para eventos do servidor

@@ -17,14 +17,12 @@ jobs:
         env:
           WEBHOOK_URL: ${{ secrets.ULTRA_BOT }}
         run: |
-          # 1. Lê o arquivo e remove o que estraga o JSON
           if [ -f CHANGELOG.md ]; then
-            CHANGES=$(head -n 15 CHANGELOG.md | sed 's/"/\\"/g')
+            CHANGES=$(head -n 15 CHANGELOG.md | sed 's/"/\\"/g' | tr '\n' '\\n')
           else
-            CHANGES="Arquivo CHANGELOG.md não encontrado."
+            CHANGES="Arquivo CHANGELOG.md não encontrado"
           fi
 
-          # 2. Envia a mensagem formatada para o Discord
           curl -H "Content-Type: application/json" \
-          -d "{\"content\": \"📜 **Change Log / Registro de Alterações**\nTodas as mudanças relevantes do servidor são documentadas aqui.\n\nEste projeto segue os padrões **Keep a Changelog** e **Semantic Versioning**.\n\n\`\`\`\n$CHANGES\n\`\`\`\n⚡ Atualização enviada automaticamente pelo GitHub Actions\"}" \
+          -d "{\"content\":\"📜 **Change Log / Registro de Alterações**\n\n$CHANGES\n\n⚡ Atualização enviada automaticamente pelo GitHub Actions\"}" \
           $WEBHOOK_URL
