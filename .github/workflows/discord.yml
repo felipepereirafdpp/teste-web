@@ -18,11 +18,11 @@ jobs:
           WEBHOOK_URL: ${{ secrets.ULTRA_BOT }}
         run: |
           if [ -f CHANGELOG.md ]; then
-            CHANGES=$(head -n 15 CHANGELOG.md | sed 's/"/\\"/g' | tr '\n' '\\n')
+            CHANGES=$(head -n 15 CHANGELOG.md)
           else
-            CHANGES="Arquivo CHANGELOG.md não encontrado"
+            CHANGES="Arquivo CHANGELOG.md não encontrado."
           fi
 
-          curl -H "Content-Type: application/json" \
-          -d "{\"content\":\" **Change Log / Registro de Alterações**\n\n$CHANGES\n\n⚡ Atualização enviada automaticamente pelo GitHub Actions\"}" \
-          $WEBHOOK_URL
+          MESSAGE=" Change Log / Registro de Alterações - Todas as mudanças relevantes do servidor são documentadas aqui. Este projeto segue os padrões Keep a Changelog e Semantic Versioning. $CHANGES ⚡ Atualização enviada automaticamente pelo GitHub Actions."
+
+          jq -n --arg content "$MESSAGE" '{content: $content}' | curl -H "Content-Type: application/json" -d @- $WEBHOOK_URL
