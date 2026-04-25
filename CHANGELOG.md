@@ -1,61 +1,61 @@
 # Change Log / Registro de Alterações
 
-Todas as mudanças relevantes do servidor serão documentadas aqui.
+Todas as mudanças relevantes do servidor serão documentadas aqui
 
 This project follows the standards of Keep a Changelog
-and Semantic Versioning.
+and Semantic Versioning
 
 ---
 
-## 🚧 [Unreleased]
-Alterações ainda em desenvolvimento (podem sofrer mudanças).
+## [Unreleased]
+Alterações ainda em desenvolvimento podem sofrer mudanças
 
-Changes currently in development (subject to change).
+Changes currently in development subject to change
 
-### ✨ Added / Adicionado
-- Sistema de exemplo: descrição breve da feature adicionada
+### Added / Adicionado
+- Sistema de exemplo descrição breve da feature adicionada
 - Novo recurso X implementado para melhorar a experiência do jogador
 
-### 🔄 Changed / Alterado
+### Changed / Alterado
 - Ajustes no sistema X para melhor performance
 - Balanceamento de mecânicas do servidor
 
-### 🐛 Fixed / Corrigido
+### Fixed / Corrigido
 - Correção de bug no sistema de inventário
 - Correção de sincronização entre cliente e servidor
 
 ---
 
-## 📦 [1.2.4] - 2017-03-15
-Atualização focada em melhorias internas e correções críticas.
+## [1.2.4] - 2017-03-15
+Atualização focada em melhorias internas e correções críticas
 
-Update focused on internal improvements and critical fixes.
+Update focused on internal improvements and critical fixes
 
-### ✨ Added / Adicionado
-- (Opcional) Novas funcionalidades adicionadas nesta versão
+### Added / Adicionado
+- Opcional Novas funcionalidades adicionadas nesta versão
 
-### 🔄 Changed / Alterado
+### Changed / Alterado
 - Migração de dependências para melhor compatibilidade com o servidor
 - Otimização de scripts para reduzir consumo de recursos
 
-### 🐛 Fixed / Corrigido
+### Fixed / Corrigido
 - Correção de erro ao deletar dados relacionados entre sistemas
 - Ajuste em inconsistências de execução de eventos
 
 ---
 
-## 📦 [1.2.3] - 2017-03-14
-Correções gerais e melhorias de estabilidade.
+## [1.2.3] - 2017-03-14
+Correções gerais e melhorias de estabilidade
 
-General fixes and stability improvements.
+General fixes and stability improvements
 
-### ✨ Added / Adicionado
-- (Opcional) Pequenas melhorias implementadas
+### Added / Adicionado
+- Opcional Pequenas melhorias implementadas
 
-### 🔄 Changed / Alterado
+### Changed / Alterado
 - Ajuste no uso de timezone para eventos do servidor
 - Melhorias na lógica de execução de scripts
 
-### 🐛 Fixed / Corrigido
+### Fixed / Corrigido
 - Correção de testes internos de módulos
-- Correção de inconsistências no sistema de timeline/eventos
+- Correção de inconsistências no sistema de timeline eventos
