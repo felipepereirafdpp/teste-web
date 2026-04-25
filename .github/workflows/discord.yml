@@ -15,18 +15,38 @@ jobs:
         run: |
           echo "COMMIT_MSG=$(git log -1 --pretty=%B)" >> $GITHUB_ENV
           echo "COMMIT_AUTHOR=$(git log -1 --pretty=%an)" >> $GITHUB_ENV
-
-      - name: Ler ChangeLog
-        run: |
-          CHANGELOG=$(awk '/\[Unreleased\]/{flag=1;next}/^---/{flag=0}flag' CHANGELOG.md | sed ':a;N;$!ba;s/\n/\\n/g')
-          echo "CHANGELOG=$CHANGELOG" >> $GITHUB_ENV
+          echo "CHANGELOG=$(head -n 15 CHANGELOG.md | tr '\n' ' ')" >> $GITHUB_ENV
 
       - name: Enviar para Discord
         env:
           WEBHOOK_URL: ${{ secrets.ULTRA_BOT }}
         run: |
-          MESSAGE="Atualizacao do Servidor\n\nAutor: $COMMIT_AUTHOR\nCommit: $COMMIT_MSG\n\nChange Log\n\n[Unreleased]\n\n$CHANGELOG"
-
           curl -H "Content-Type: application/json" \
-          -d "{\"content\":\"$MESSAGE\"}" \
+          -d "{
+            \"embeds\": [
+              {
+                \"title\": \"Atualizacao do Servidor\",
+                \"color\": 3447003,
+                \"fields\": [
+                  {
+                    \"name\": \"Autor\",
+                    \"value\": \"$COMMIT_AUTHOR\",
+                    \"inline\": true
+                  },
+                  {
+                    \"name\": \"Commit\",
+                    \"value\": \"$COMMIT_MSG\",
+                    \"inline\": true
+                  },
+                  {
+                    \"name\": \"Change Log\",
+                    \"value\": \"$CHANGELOG\"
+                  }
+                ],
+                \"footer\": {
+                  \"text\": \"Atualizacao enviada automaticamente pelo GitHub Actions\"
+                }
+              }
+            ]
+          }" \
           $WEBHOOK_URL
