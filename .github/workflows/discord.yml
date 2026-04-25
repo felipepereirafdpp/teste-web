@@ -16,10 +16,7 @@ jobs:
           echo "COMMIT_MSG=$(git log -1 --pretty=%B)" >> $GITHUB_ENV 
           echo "COMMIT_AUTHOR=$(git log -1 --pretty=%an)" >> $GITHUB_ENV
 
-          FILES=git diff --name-only HEAD~1 HEAD || git diff --name-only HEAD HEAD
-          echo "FILES<<EOF" >> $GITHUB_ENV
-          echo "$FILES" >> $GITHUB_ENV
-          echo "EOF" >> $GITHUB_ENV
+         
 
       - name: Enviar para Discord # nome do passo que aparece no log do GitHub Actions /(git log -1 --pretty=%B)" >> $GITHUB_ENV  pega a mensagem enviado no commit , COMMIT_AUTHOR=$(git log -1 --pretty=%an)" >> $GITHUB_ENV pega o autor do commit
         env: 
@@ -27,7 +24,7 @@ jobs:
         run: |  # tudo abaixo será executado como comandos no terminal Linux do runner / linha de baixo meio que cria uma variavel e recebe o texto
           
           CHANGELOG="\nAdded\n• Novos sistemas ou funcionalidades adicionadas ao servidor\n\nChanged\n• Alteracoes ou melhorias em sistemas existentes\n\nFixed\n• Correcoes de bugs ou problemas encontrados" 
-          FILES_FORMATTED=$(echo "$FILES" | sed 's/^/• /')
+    
 
           curl -H "Content-Type: application/json" \
           -d "{
@@ -46,10 +43,7 @@ jobs:
                     \"value\": \"$COMMIT_MSG\",
                     \"inline\": true
                   },
-                  {
-                    \"name\": \"Arquivos modificados\",
-                    \"value\": \"$FILES_FORMATTED\"
-                  },
+                  
                   {
                     \"name\": \"Change Log\",
                     \"value\": \"$CHANGELOG\"
