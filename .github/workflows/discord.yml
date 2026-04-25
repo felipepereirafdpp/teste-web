@@ -16,17 +16,23 @@ jobs:
           echo "COMMIT_MSG=$(git log -1 --pretty=%B)" >> $GITHUB_ENV
           
           echo "COMMIT_AUTHOR=$(git log -1 --pretty=%an)" >> $GITHUB_ENV
+          
+      - name: Pegar changelog
+        run: |
+          CHANGELOG=$(cat CHANGELOG.md)
+          echo "CHANGELOG<<EOF" >> $GITHUB_ENV
+          echo "$CHANGELOG" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
 
       - name: Escrever Mensagem
         run: |
-          echo "User: $COMMIT_AUTHOR"
-          
-          echo "Commit: $COMMIT_MSG"
+          echo "User : $COMMIT_AUTHOR"
+          echo "Commit : $COMMIT_MSG"
 
       - name: Enviar ChangeLog para Discord
         env:
           WEBHOOK_URL: ${{ secrets.ULTRA_BOT }}
         run: |
           curl -H "Content-Type: application/json" \
-          -d "{\"content\":\"Autor: $COMMIT_AUTHOR\nMensagem: $COMMIT_MSG\"}" \
+          -d "{\"content\":\"Autor: $COMMIT_AUTHOR\nCommit: $COMMIT_MSG\n\n$CHANGELOG\"}" \
           $WEBHOOK_URL
