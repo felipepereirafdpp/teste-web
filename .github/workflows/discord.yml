@@ -16,11 +16,11 @@ jobs:
           echo "COMMIT_MSG=$(git log -1 --pretty=%B)" >> $GITHUB_ENV
           echo "COMMIT_AUTHOR=$(git log -1 --pretty=%an)" >> $GITHUB_ENV
 
-      - name: Enviar para Discord
-        env:
-          WEBHOOK_URL: ${{ secrets.ULTRA_BOT }}
-        run: |
-          CHANGELOG="Added\n• Novos sistemas ou funcionalidades adicionadas ao servidor\n\nChanged\n• Alteracoes ou melhorias em sistemas existentes\n\nFixed\n• Correcoes de bugs ou problemas encontrados"
+      - name: Enviar para Discord # nome do passo que aparece no log do GitHub Actions
+        env: 
+          WEBHOOK_URL: ${{ secrets.ULTRA_BOT }} # pega o webhook salvo nos Secrets do GitHub ( link do Discord)
+        run: |  # tudo abaixo será executado como comandos no terminal Linux do runner
+          CHANGELOG="\nAdded\n• Novos sistemas ou funcionalidades adicionadas ao servidor\n\nChanged\n• Alteracoes ou melhorias em sistemas existentes\n\nFixed\n• Correcoes de bugs ou problemas encontrados"
 
           curl -H "Content-Type: application/json" \
           -d "{
