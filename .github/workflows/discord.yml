@@ -11,15 +11,17 @@ jobs:
       - name: Baixar repositorio
         uses: actions/checkout@v4
 
-      - name: Get commit info
+      - name: Pegar info commit
         run: |
           echo "COMMIT_MSG=$(git log -1 --pretty=%B)" >> $GITHUB_ENV
+          echo "COMMIT_EMAIL=$(git log -1 --pretty=%ae)" >> $GITHUB_ENV"
           echo "COMMIT_AUTHOR=$(git log -1 --pretty=%an)" >> $GITHUB_ENV
 
-      - name: Print
+      - name: Escrever Mensagem
         run: |
-          echo "Autor: $COMMIT_AUTHOR"
-          echo "Mensagem: $COMMIT_MSG"
+          echo "User: $COMMIT_AUTHOR"
+          echo "Email: $COMMIT_EMAIL"
+          echo "Commit: $COMMIT_MSG"
 
       - name: Enviar ChangeLog para Discord
         env:
