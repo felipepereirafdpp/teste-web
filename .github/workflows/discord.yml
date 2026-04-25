@@ -15,17 +15,18 @@ jobs:
         run: |
           echo "COMMIT_MSG=$(git log -1 --pretty=%B)" >> $GITHUB_ENV
           echo "COMMIT_AUTHOR=$(git log -1 --pretty=%an)" >> $GITHUB_ENV
-          echo "CHANGELOG=$(head -n 15 CHANGELOG.md | tr '\n' ' ')" >> $GITHUB_ENV
 
       - name: Enviar para Discord
         env:
           WEBHOOK_URL: ${{ secrets.ULTRA_BOT }}
         run: |
+          CHANGELOG="Added\n• Novos sistemas ou funcionalidades adicionadas ao servidor\n\nChanged\n• Alteracoes ou melhorias em sistemas existentes\n\nFixed\n• Correcoes de bugs ou problemas encontrados"
+
           curl -H "Content-Type: application/json" \
           -d "{
             \"embeds\": [
               {
-                \"title\": \"Atualização do Servidor\",
+                \"title\": \"Atualizacao do Servidor\",
                 \"color\": 16766720,
                 \"fields\": [
                   {
