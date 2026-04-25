@@ -19,7 +19,7 @@ jobs:
         run: |
           # 1. Lê o arquivo e remove o que estraga o JSON
           if [ -f CHANGELOG.md ]; then
-            CHANGES=$(head -n 25 CHANGELOG.md | tr -d '"' | tr -d '`' | tr '\n' '\n')
+            CHANGES=$(head -n 15 CHANGELOG.md | sed 's/"/\\"/g')
           else
             CHANGES="Arquivo CHANGELOG.md não encontrado."
           fi
