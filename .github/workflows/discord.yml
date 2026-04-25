@@ -50,7 +50,7 @@ jobs:
                   }
                 ],
                 \"footer\": {
-                  \"text\": \""text": "Atualizado em $DATE • GitHub Actions"\"
+                  \"text\": "Atualizado em $DATE • GitHub Actions"\"
                 }
               }
             ]
