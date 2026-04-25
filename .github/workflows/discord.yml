@@ -1,4 +1,4 @@
-name: Notificação de Change Log no Discord
+name: Notificacao ChangeLog Discord
 
 on:
   push:
@@ -10,19 +10,19 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Baixar repositório
+      - name: Baixar repositorio
         uses: actions/checkout@v4
 
-      - name: Enviar para Discord
+      - name: Enviar ChangeLog para Discord
         env:
           WEBHOOK_URL: ${{ secrets.ULTRA_BOT }}
         run: |
           if [ -f CHANGELOG.md ]; then
-            CHANGES=$(head -n 80 CHANGELOG.md)
+            CHANGELOG=$(head -n 30 CHANGELOG.md | tr '\n' ' ')
           else
-            CHANGES="CHANGELOG.md não encontrado."
+            CHANGELOG="CHANGELOG.md nao encontrado"
           fi
 
-          jq -n --arg content "Change Log / Registro de Alterações\n\n\`\`\`\n$CHANGES\n\`\`\`\n." \
-          '{content: $content}' \
-          | curl -H "Content-Type: application/json" -d @- $WEBHOOK_URL
+          curl -H "Content-Type: application/json" \
+          -d "{\"content\":\"Atualizacao do Servidor\n\nChange Log / Registro de Alteracoes\n\nTodas as mudancas relevantes do servidor sao documentadas aqui.\n\nEste projeto segue os padroes Keep a Changelog e Semantic Versioning.\n\n$CHANGELOG\n\nCommit realizado seguindo o padrao Conventional Commits.\n\nAtualizacao enviada automaticamente pelo GitHub Actions.\"}" \
+          $WEBHOOK_URL
