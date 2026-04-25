@@ -43,18 +43,14 @@ jobs:
                     \"value\": \"$COMMIT_MSG\",
                     \"inline\": true
                   },
-                  {
-                    "name": "Data",
-                    "value": "$DATE",
-                    "inline": true
-                  },            
+                  
                   {
                     \"name\": \"Change Log\",
                     \"value\": \"$CHANGELOG\"
                   }
                 ],
                 \"footer\": {
-                  \"text\": \"Atualizacao enviada automaticamente pelo GitHub Actions\"
+                  \"text\": \""text": "Atualizado em $DATE • GitHub Actions"\"
                 }
               }
             ]
