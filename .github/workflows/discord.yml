@@ -1,8 +1,7 @@
-name: Notificacao ChangeLog Discord
+name: Notificacao Changelog Discord
 
 on:
   push:
-   
 
 jobs:
   notifyChangeLog:
@@ -12,10 +11,20 @@ jobs:
       - name: Baixar repositorio
         uses: actions/checkout@v4
 
+      - name: Get commit info
+        run: |
+          echo "COMMIT_MSG=$(git log -1 --pretty=%B)" >> $GITHUB_ENV
+          echo "COMMIT_AUTHOR=$(git log -1 --pretty=%an)" >> $GITHUB_ENV
+
+      - name: Print
+        run: |
+          echo "Autor: $COMMIT_AUTHOR"
+          echo "Mensagem: $COMMIT_MSG"
+
       - name: Enviar ChangeLog para Discord
         env:
           WEBHOOK_URL: ${{ secrets.ULTRA_BOT }}
         run: |
           curl -H "Content-Type: application/json" \
-          -d '{"content":"Nova atualizacao enviada para o repositorio"}' \
+          -d "{\"content\":\"Autor: $COMMIT_AUTHOR\nMensagem: $COMMIT_MSG\"}" \
           $WEBHOOK_URL
