@@ -14,13 +14,13 @@ jobs:
       - name: Pegar info commit
         run: |
           echo "COMMIT_MSG=$(git log -1 --pretty=%B)" >> $GITHUB_ENV
-          echo "COMMIT_EMAIL=$(git log -1 --pretty=%ae)" >> $GITHUB_ENV"
+          
           echo "COMMIT_AUTHOR=$(git log -1 --pretty=%an)" >> $GITHUB_ENV
 
       - name: Escrever Mensagem
         run: |
           echo "User: $COMMIT_AUTHOR"
-          echo "Email: $COMMIT_EMAIL"
+          
           echo "Commit: $COMMIT_MSG"
 
       - name: Enviar ChangeLog para Discord
