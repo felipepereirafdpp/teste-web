@@ -24,16 +24,24 @@ jobs:
           CHANGED=$(git log -10 --pretty=format:"%s" | grep -i "^change" | sed 's/^change: /**•** /')
           FIXED=$(git log -10 --pretty=format:"%s" | grep -i "^fix" | sed 's/^fix: /**•** /')
 
-          echo "ADDED<<EOF" >> $GITHUB_ENV
-          echo "$ADDED" >> $GITHUB_ENV
-          echo "EOF" >> $GITHUB_ENV
+          DESC="**👤 Autor:** $(git log -1 --pretty=format:'%an')\n\n━━━━━━━━━━━━━━━━━━━━━━\n"
 
-          echo "CHANGED<<EOF" >> $GITHUB_ENV
-          echo "$CHANGED" >> $GITHUB_ENV
-          echo "EOF" >> $GITHUB_ENV
+          if [ ! -z "$ADDED" ]; then
+            DESC="${DESC}\n**🟢 Added**\n${ADDED}\n"
+          fi
 
-          echo "FIXED<<EOF" >> $GITHUB_ENV
-          echo "$FIXED" >> $GITHUB_ENV
+          if [ ! -z "$CHANGED" ]; then
+            DESC="${DESC}\n**🟡 Changed**\n${CHANGED}\n"
+          fi
+
+          if [ ! -z "$FIXED" ]; then
+            DESC="${DESC}\n**🔴 Fixed**\n${FIXED}\n"
+          fi
+
+          DESC="${DESC}\n━━━━━━━━━━━━━━━━━━━━━━"
+
+          echo "DESC<<EOF" >> $GITHUB_ENV
+          echo -e "$DESC" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
 
       - name: Send Embed
@@ -41,8 +49,8 @@ jobs:
           curl -H "Content-Type: application/json" \
           -d "{
             \"embeds\": [{
-              \"title\": \"📢 CHANGELOG - ATUALIZAÇÃO DO SERVIDOR | ${DATE}\",
-              \"description\": \"**👤 Autor:** ${AUTHOR}\n\n________________\n\n** Added**\n${ADDED:-• Nenhuma alteração}\n\n** Changed**\n${CHANGED:-• Nenhuma alteração}\n\n** Fixed**\n${FIXED:-• Nenhuma alteração}\n\n________________\",
+              \"title\": \"📢 CHANGELOG - ATUALIZAÇÃO DO SERVIDOR ${DATE}\",
+              \"description\": \"${DESC}\",
               \"color\": 16766720,
               \"footer\": {
                 \"text\": \"Atualização enviada automaticamente pelo GitHub\"
