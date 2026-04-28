@@ -50,23 +50,23 @@ jobs:
                   \"inline\": true
                 },
                 {
-                  \"name\": \"👤 Autor\",
+                  \"name\": \"👤 Autor do commit\",
                   \"value\": \"${AUTHOR}\",
                   \"inline\": true
                 },
                 {
-                  \"name\": \"🆕 Added\",
-                  \"value\": \"${ADDED:-Sem alterações}\",
+                  \"name\": \"━━━━━━━━━━━━━━━━━━━━━━\",
+                  \"value\": \" **Added**\n${ADDED:-• Nenhuma alteração}\",
                   \"inline\": false
                 },
                 {
-                  \"name\": \"⚙️ Changed\",
-                  \"value\": \"${CHANGED:-Sem alterações}\",
+                  \"name\": \"━━━━━━━━━━━━━━━━━━━━━━\",
+                  \"value\": \" **Changed**\n${CHANGED:-• Nenhuma alteração}\",
                   \"inline\": false
                 },
                 {
-                  \"name\": \"🐛 Fixed\",
-                  \"value\": \"${FIXED:-Sem alterações}\",
+                  \"name\": \"━━━━━━━━━━━━━━━━━━━━━━\",
+                  \"value\": \" **Fixed**\n${FIXED:-• Nenhuma alteração}\",
                   \"inline\": false
                 }
               ],
