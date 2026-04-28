@@ -20,9 +20,9 @@ jobs:
 
       - name: Get commits
         run: |
-          ADDED=$(git log -10 --pretty=format:"%s" | grep -i "^feat" | sed 's/^feat: /• /')
-          CHANGED=$(git log -10 --pretty=format:"%s" | grep -i "^change" | sed 's/^change: /• /')
-          FIXED=$(git log -10 --pretty=format:"%s" | grep -i "^fix" | sed 's/^fix: /• /')
+          ADDED=$(git log -10 --pretty=format:"%s" | grep -i "^feat" | sed 's/^feat: /**•** /')
+          CHANGED=$(git log -10 --pretty=format:"%s" | grep -i "^change" | sed 's/^change: /**•** /')
+          FIXED=$(git log -10 --pretty=format:"%s" | grep -i "^fix" | sed 's/^fix: /**•** /')
 
           echo "ADDED<<EOF" >> $GITHUB_ENV
           echo "$ADDED" >> $GITHUB_ENV
@@ -42,34 +42,8 @@ jobs:
           -d "{
             \"embeds\": [{
               \"title\": \"📢 CHANGELOG - ATUALIZAÇÃO DO SERVIDOR\",
+              \"description\": \"**📅 Data:** ${DATE}\n**👤 Autor:** ${AUTHOR}\n\n━━━━━━━━━━━━━━━━━━━━━━\n\n**🟢 Added**\n${ADDED:-• Nenhuma alteração}\n\n**🟡 Changed**\n${CHANGED:-• Nenhuma alteração}\n\n**🔴 Fixed**\n${FIXED:-• Nenhuma alteração}\n\n━━━━━━━━━━━━━━━━━━━━━━\",
               \"color\": 16766720,
-              \"fields\": [
-                {
-                  \"name\": \"📅 Data da atualização\",
-                  \"value\": \"${DATE}\",
-                  \"inline\": true
-                },
-                {
-                  \"name\": \"👤 Autor do commit\",
-                  \"value\": \"${AUTHOR}\",
-                  \"inline\": true
-                },
-                {
-                  \"name\": \"━━━━━━━━━━━━━━━━━━━━━━\",
-                  \"value\": \" **Added**\n${ADDED:-• Nenhuma alteração}\",
-                  \"inline\": false
-                },
-                {
-                  \"name\": \"━━━━━━━━━━━━━━━━━━━━━━\",
-                  \"value\": \" **Changed**\n${CHANGED:-• Nenhuma alteração}\",
-                  \"inline\": false
-                },
-                {
-                  \"name\": \"━━━━━━━━━━━━━━━━━━━━━━\",
-                  \"value\": \" **Fixed**\n${FIXED:-• Nenhuma alteração}\",
-                  \"inline\": false
-                }
-              ],
               \"footer\": {
                 \"text\": \"Atualização enviada automaticamente pelo GitHub\"
               }
