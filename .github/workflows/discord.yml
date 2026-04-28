@@ -42,7 +42,7 @@ jobs:
           -d "{
             \"embeds\": [{
               \"title\": \"📢 CHANGELOG - ATUALIZAÇÃO DO SERVIDOR | ${DATE}\",
-              \"description\": \"**👤 Autor:** ${AUTHOR}\n\n_____________________________\n\n** Added**\n${ADDED:-• Nenhuma alteração}\n\n** Changed**\n${CHANGED:-• Nenhuma alteração}\n\n** Fixed**\n${FIXED:-• Nenhuma alteração}\n\n_____________________________\",
+              \"description\": \"**👤 Autor:** ${AUTHOR}\n\n______________________________________________________________________________________________\n\n** Added**\n${ADDED:-• Nenhuma alteração}\n\n** Changed**\n${CHANGED:-• Nenhuma alteração}\n\n** Fixed**\n${FIXED:-• Nenhuma alteração}\n\n______________________________________________________________________________________________\",
               \"color\": 16766720,
               \"footer\": {
                 \"text\": \"Atualização enviada automaticamente pelo GitHub\"
