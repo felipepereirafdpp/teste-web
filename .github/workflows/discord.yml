@@ -1,9 +1,9 @@
-name: Discord Changelog
+name: Discord Daily Changelog
 
 on:
-  push:
-    branches:
-      - main
+  schedule:
+    - cron: "0 23 * * *"
+  workflow_dispatch:
 
 jobs:
   changelog:
@@ -13,19 +13,23 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Get commit info
+      - name: Get Date
         run: |
           echo "DATE=$(date '+%d/%m/%Y')" >> $GITHUB_ENV
-          echo "AUTHOR=$(git log -1 --pretty=format:'%an')" >> $GITHUB_ENV
 
-      - name: Get commits
+      - name: Get commits of the day
         run: |
-          ADDED=$(git log -10 --pretty=format:"%s" | grep -i "^feat" | sed 's/^feat: /**•** /')
-          CHANGED=$(git log -10 --pretty=format:"%s" | grep -i "^change" | sed 's/^change: /**•** /')
-          FIXED=$(git log -10 --pretty=format:"%s" | grep -i "^fix" | sed 's/^fix: /**•** /')
+          ADDED=$(git log --since="today" --pretty=format:"%s" | grep -i "^feat" | sed 's/^feat: /• /')
+          POLICE=$(git log --since="today" --pretty=format:"%s" | grep -i "^police" | sed 's/^police: /• /')
+          CHANGED=$(git log --since="today" --pretty=format:"%s" | grep -i "^change" | sed 's/^change: /• /')
+          FIXED=$(git log --since="today" --pretty=format:"%s" | grep -i "^fix" | sed 's/^fix: /• /')
 
           echo "ADDED<<EOF" >> $GITHUB_ENV
           echo "$ADDED" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+
+          echo "POLICE<<EOF" >> $GITHUB_ENV
+          echo "$POLICE" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
 
           echo "CHANGED<<EOF" >> $GITHUB_ENV
@@ -41,11 +45,11 @@ jobs:
           curl -H "Content-Type: application/json" \
           -d "{
             \"embeds\": [{
-              \"title\": \"📢 CHANGELOG - ATUALIZAÇÃO DO SERVIDOR\",
-              \"description\": \"**📅 Data:** ${DATE}\n**👤 Autor:** ${AUTHOR}\n\n━━━━━━━━━━━━━━━━━━━━━━\n\n**🟢 Added**\n${ADDED:-• Nenhuma alteração}\n\n**🟡 Changed**\n${CHANGED:-• Nenhuma alteração}\n\n**🔴 Fixed**\n${FIXED:-• Nenhuma alteração}\n\n━━━━━━━━━━━━━━━━━━━━━━\",
+              \"title\": \"📢 Changelog do dia ${DATE}\",
               \"color\": 16766720,
+              \"description\": \"────────────────────────────────────\n\n📢 **Atualizações e Ajustes**\n\n${ADDED:-• Nenhuma atualização hoje}\n\n────────────────────────────────────\n\n🚔 **Forças Policiais**\n\n${POLICE:-• Nenhuma alteração}\n\n────────────────────────────────────\n\n⚙️ **Mudanças**\n\n${CHANGED:-• Nenhuma mudança}\n\n────────────────────────────────────\n\n🐛 **Correções**\n\n${FIXED:-• Nenhuma correção}\n\n────────────────────────────────────\",
               \"footer\": {
-                \"text\": \"Atualização enviada automaticamente pelo GitHub\"
+                \"text\": \"Changelog automático enviado pelo GitHub\"
               }
             }]
           }" \
