@@ -37,21 +37,21 @@ jobs:
           curl -H "Content-Type: application/json" \
           -d "{
             \"embeds\": [{
-              \"title\": \"📢 CHANGELOG - ATUALIZAÇÃO DO SERVIDOR\",
+              \"title\": \"CHANGELOG - ATUALIZAÇÃO DO SERVIDOR\",
               \"color\": 16766720,
               \"fields\": [
                 {
-                  \"name\": \"🆕 Added\",
+                  \"name\": \"Added\",
                   \"value\": \"${ADDED:-Sem alterações}\",
                   \"inline\": false
                 },
                 {
-                  \"name\": \"⚙️ Changed\",
+                  \"name\": \"Changed\",
                   \"value\": \"${CHANGED:-Sem alterações}\",
                   \"inline\": false
                 },
                 {
-                  \"name\": \"🐛 Fixed\",
+                  \"name\": \"Fixed\",
                   \"value\": \"${FIXED:-Sem alterações}\",
                   \"inline\": false
                 }
