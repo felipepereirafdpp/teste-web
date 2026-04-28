@@ -13,7 +13,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: pegar  commits
+      - name: Get commits
         id: commits
         run: |
           ADDED=$(git log -10 --pretty=format:"%s" | grep -i "^feat" | sed 's/^feat: /• /')
@@ -23,7 +23,6 @@ jobs:
           echo "ADDED<<EOF" >> $GITHUB_ENV
           echo "$ADDED" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
-          echo "COMMIT_AUTHOR=$(git log -1 --pretty=%an)" >> $GITHUB_ENV
 
           echo "CHANGED<<EOF" >> $GITHUB_ENV
           echo "$CHANGED" >> $GITHUB_ENV
@@ -32,21 +31,15 @@ jobs:
           echo "FIXED<<EOF" >> $GITHUB_ENV
           echo "$FIXED" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
-          COMMIT_AUTHOR=$(git log -1 --pretty=%an)" >> $GITHUB_ENV pega o autor do commit
 
       - name: Send Embed
         run: |
           curl -H "Content-Type: application/json" \
           -d "{
             \"embeds\": [{
-              \"title\": \"📢 CHANGELOG - ATUALIZAÇÃO DO SERVIDOR\",
+              \"title\": \"CHANGELOG - ATUALIZAÇÃO DO SERVIDOR\",
               \"color\": 16766720,
               \"fields\": [
-                  {
-                    \"name\": \"Autor\",
-                    \"value\": \"$COMMIT_AUTHOR\",
-                    \"inline\": true
-                },
                 {
                   \"name\": \"Added\",
                   \"value\": \"${ADDED:-Sem alterações}\",

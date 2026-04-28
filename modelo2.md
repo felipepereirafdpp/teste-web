@@ -1,0 +1,58 @@
+name: Notificacao Changelog Discord
+
+on:
+  push:
+
+jobs:
+  notifyChangeLog:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Baixar repositorio
+        uses: actions/checkout@v4
+
+      - name: Pegar info commit 
+        run: |
+          echo "COMMIT_MSG=$(git log -1 --pretty=%B)" >> $GITHUB_ENV 
+          echo "COMMIT_AUTHOR=$(git log -1 --pretty=%an)" >> $GITHUB_ENV
+
+         
+
+      - name: Enviar para Discord # nome do passo que aparece no log do GitHub Actions /(git log -1 --pretty=%B)" >> $GITHUB_ENV  pega a mensagem enviado no commit , COMMIT_AUTHOR=$(git log -1 --pretty=%an)" >> $GITHUB_ENV pega o autor do commit
+        env: 
+          WEBHOOK_URL: ${{ secrets.ULTRA_BOT }} # pega o webhook salvo nos Secrets do GitHub ( link do Discord)
+        run: |  # tudo abaixo será executado como comandos no terminal Linux do runner / linha de baixo meio que cria uma variavel e recebe o texto
+          
+          CHANGELOG="\nAdded\n• Novos sistemas ou funcionalidades adicionadas ao servidor\n\nChanged\n• Alteracoes ou melhorias em sistemas existentes\n\nFixed\n• Correcoes de bugs ou problemas encontrados" 
+          
+
+          curl -H "Content-Type: application/json" \
+          -d "{
+            \"embeds\": [   
+              {
+                \"title\": \"Atualização do Servidor\",
+                \"color\": 16766720,
+                \"fields\": [
+                  {
+                    \"name\": \"Autor\",
+                    \"value\": \"$COMMIT_AUTHOR\",
+                    \"inline\": true
+                  },
+                  {
+                    \"name\": \"Commit\",
+                    \"value\": \"$COMMIT_MSG\",
+                    \"inline\": true
+                  },
+                  
+                  {
+                    \"name\": \"Change Log\",
+                    \"value\": \"$CHANGELOG\"
+                  }
+                ],
+                \"footer\": {
+                  \"text\": \"Atualizacao enviada automaticamente pelo GitHub Actions\"
+                }
+              }
+            ]
+          }" \
+          $WEBHOOK_URL
