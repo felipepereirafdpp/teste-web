@@ -41,8 +41,8 @@ jobs:
           curl -H "Content-Type: application/json" \
           -d "{
             \"embeds\": [{
-              \"title\": \"📢 CHANGELOG - ATUALIZAÇÃO DO SERVIDOR\",
-              \"description\": \"**📅 Data:** ${DATE}\n**👤 Autor:** ${AUTHOR}\n\n━━━━━━━━━━━━━━━━━━━━━━\n\n**🟢 Added**\n${ADDED:-• Nenhuma alteração}\n\n**🟡 Changed**\n${CHANGED:-• Nenhuma alteração}\n\n**🔴 Fixed**\n${FIXED:-• Nenhuma alteração}\n\n━━━━━━━━━━━━━━━━━━━━━━\",
+              \"title\": \"📢 CHANGELOG - ATUALIZAÇÃO DO SERVIDOR ${DATE}\",
+              \"description\": \n**👤 Autor:** ${AUTHOR}\n\n━━━━━━━━━━━━━━━━━━━━━━\n\n** Added**\n${ADDED:-• Nenhuma alteração}\n\n** Changed**\n${CHANGED:-• Nenhuma alteração}\n\n** Fixed**\n${FIXED:-• Nenhuma alteração}\n\n━━━━━━━━━━━━━━━━━━━━━━\",
               \"color\": 16766720,
               \"footer\": {
                 \"text\": \"Atualização enviada automaticamente pelo GitHub\"
