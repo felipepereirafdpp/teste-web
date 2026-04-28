@@ -2,7 +2,7 @@ name: Discord Daily Changelog
 
 on:
   schedule:
-    - cron: "0 23 * * *"
+    - cron: "0 23 * * *" # roda todo dia
   workflow_dispatch:
 
 jobs:
@@ -13,44 +13,28 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Get Date
+      - name: Pegar data
         run: |
           echo "DATE=$(date '+%d/%m/%Y')" >> $GITHUB_ENV
 
-      - name: Get commits of the day
+      - name: Pegar commits do dia
         run: |
-          ADDED=$(git log --since="today" --pretty=format:"%s" | grep -i "^feat" | sed 's/^feat: /• /')
-          POLICE=$(git log --since="today" --pretty=format:"%s" | grep -i "^police" | sed 's/^police: /• /')
-          CHANGED=$(git log --since="today" --pretty=format:"%s" | grep -i "^change" | sed 's/^change: /• /')
-          FIXED=$(git log --since="today" --pretty=format:"%s" | grep -i "^fix" | sed 's/^fix: /• /')
+          COMMITS=$(git log --since="00:00" --pretty=format:"• %s (%an)")
 
-          echo "ADDED<<EOF" >> $GITHUB_ENV
-          echo "$ADDED" >> $GITHUB_ENV
+          echo "COMMITS<<EOF" >> $GITHUB_ENV
+          echo "$COMMITS" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
 
-          echo "POLICE<<EOF" >> $GITHUB_ENV
-          echo "$POLICE" >> $GITHUB_ENV
-          echo "EOF" >> $GITHUB_ENV
-
-          echo "CHANGED<<EOF" >> $GITHUB_ENV
-          echo "$CHANGED" >> $GITHUB_ENV
-          echo "EOF" >> $GITHUB_ENV
-
-          echo "FIXED<<EOF" >> $GITHUB_ENV
-          echo "$FIXED" >> $GITHUB_ENV
-          echo "EOF" >> $GITHUB_ENV
-
-      - name: Send Embed
+      - name: Enviar para Discord
+        env:
+          WEBHOOK: ${{ secrets.ULTRA_BOT }}
         run: |
           curl -H "Content-Type: application/json" \
           -d "{
             \"embeds\": [{
-              \"title\": \"📢 Changelog do dia ${DATE}\",
+              \"title\": \"📢 CHANGELOG DO DIA ${DATE}\",
               \"color\": 16766720,
-              \"description\": \"────────────────────────────────────\n\n📢 **Atualizações e Ajustes**\n\n${ADDED:-• Nenhuma atualização hoje}\n\n────────────────────────────────────\n\n🚔 **Forças Policiais**\n\n${POLICE:-• Nenhuma alteração}\n\n────────────────────────────────────\n\n⚙️ **Mudanças**\n\n${CHANGED:-• Nenhuma mudança}\n\n────────────────────────────────────\n\n🐛 **Correções**\n\n${FIXED:-• Nenhuma correção}\n\n────────────────────────────────────\",
-              \"footer\": {
-                \"text\": \"Changelog automático enviado pelo GitHub\"
-              }
+              \"description\": \"━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n📢 **Commits realizados hoje:**\n\n${COMMITS:-• Nenhum commit hoje}\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n🤖 Atualização automática via GitHub\"
             }]
           }" \
-          ${{ secrets.ULTRA_BOT }}
+          $WEBHOOK
