@@ -1,9 +1,9 @@
-name: Discord Daily Changelog
+name: Discord Changelog
 
 on:
-  schedule:
-    - cron: "0 23 * * *" # roda todo dia
-  workflow_dispatch:
+  push:
+    branches:
+      - main
 
 jobs:
   changelog:
@@ -13,28 +13,40 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Pegar data
+      - name: Get commit info
         run: |
           echo "DATE=$(date '+%d/%m/%Y')" >> $GITHUB_ENV
+          echo "AUTHOR=$(git log -1 --pretty=format:'%an')" >> $GITHUB_ENV
 
-      - name: Pegar commits do dia
+      - name: Get commits
         run: |
-          COMMITS=$(git log --since="00:00" --pretty=format:"• %s (%an)")
+          ADDED=$(git log -10 --pretty=format:"%s" | grep -i "^feat" | sed 's/^feat: /**•** /')
+          CHANGED=$(git log -10 --pretty=format:"%s" | grep -i "^change" | sed 's/^change: /**•** /')
+          FIXED=$(git log -10 --pretty=format:"%s" | grep -i "^fix" | sed 's/^fix: /**•** /')
 
-          echo "COMMITS<<EOF" >> $GITHUB_ENV
-          echo "$COMMITS" >> $GITHUB_ENV
+          echo "ADDED<<EOF" >> $GITHUB_ENV
+          echo "$ADDED" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
 
-      - name: Enviar para Discord
-        env:
-          WEBHOOK: ${{ secrets.ULTRA_BOT }}
+          echo "CHANGED<<EOF" >> $GITHUB_ENV
+          echo "$CHANGED" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+
+          echo "FIXED<<EOF" >> $GITHUB_ENV
+          echo "$FIXED" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+
+      - name: Send Embed
         run: |
           curl -H "Content-Type: application/json" \
           -d "{
             \"embeds\": [{
-              \"title\": \"📢 CHANGELOG DO DIA ${DATE}\",
+              \"title\": \"📢 CHANGELOG - ATUALIZAÇÃO DO SERVIDOR\",
+              \"description\": \"**📅 Data:** ${DATE}\n**👤 Autor:** ${AUTHOR}\n\n━━━━━━━━━━━━━━━━━━━━━━\n\n**🟢 Added**\n${ADDED:-• Nenhuma alteração}\n\n**🟡 Changed**\n${CHANGED:-• Nenhuma alteração}\n\n**🔴 Fixed**\n${FIXED:-• Nenhuma alteração}\n\n━━━━━━━━━━━━━━━━━━━━━━\",
               \"color\": 16766720,
-              \"description\": \"━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n📢 **Commits realizados hoje:**\n\n${COMMITS:-• Nenhum commit hoje}\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n🤖 Atualização automática via GitHub\"
+              \"footer\": {
+                \"text\": \"Atualização enviada automaticamente pelo GitHub\"
+              }
             }]
           }" \
-          $WEBHOOK
+          ${{ secrets.ULTRA_BOT }}
